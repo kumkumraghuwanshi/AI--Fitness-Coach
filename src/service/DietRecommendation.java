@@ -1,13 +1,19 @@
 package service;
 
+import model.User;
+
 public class DietRecommendation {
-    public void recommendDiet(String goal, double tdee) {
-        if(goal == null || goal.isEmpty()){
-            System.out.println("Goal Not Found");
+    public void recommendDiet(User user, Calculator calculator) {
+        double bmr = user.getBmr();
+        double tdee = user.getTdee();
+
+        if(user.getBmr() == 0 || user.getTdee() == 0){
+            System.out.println("Please calculate BMR and TDEE first.");
             return;
         }
+
         double recommendedCalories ;
-        switch(goal){
+        switch(user.getGoal()){
             case "Weight Loss":
                 recommendedCalories = tdee - 500;
                 System.out.println("========== Weight Loss Diet Plan ==========");

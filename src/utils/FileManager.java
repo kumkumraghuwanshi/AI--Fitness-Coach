@@ -4,15 +4,17 @@ import java.io.IOException;
 import model.User;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.util.List;
 
 public class FileManager {
-    public void saveUserData(User user){
-        if (user == null){
+    public void saveAllUsers(List<User> users){
+        if (users == null || users.isEmpty()) {
             System.out.println("No user data found.");
             return;
         }
         try {
             FileWriter writer = new FileWriter("UserData.txt");
+            for(User user : users){
             writer.write("======== AI Fitness Report ========\n");
             writer.write("\n");
             writer.write("Name : " + user.getName() + "\n");
@@ -36,6 +38,8 @@ public class FileManager {
             writer.write(String.format("TDEE : %.2f Calories/day%n", user.getTdee()));
             writer.write(String.format("Water Intake : %.2f Liters/day%n", user.getWaterIntake()));
             writer.write("\n");
+            writer.write("\n=========================================\n\n");
+            }
             writer.close();
             System.out.println("User data saved successfully.");
         } catch (IOException e) {

@@ -1,4 +1,5 @@
-package utils;
+package service;
+import model.User;
 
 public class Calculator {
     //BMI (Body Mass Index)
@@ -24,6 +25,14 @@ public class Calculator {
             return "Obese";
         }
     }
+    public void displayBMI(User user){
+        double bmi = calculateBMI(user.getHeight(),user.getWeight());
+        System.out.printf("BMI : %.2f%n", bmi);
+        String bmiCategory = getBMICategory(bmi);
+        System.out.println(bmiCategory);
+        user.setBmi(bmi);
+        user.setBmiCategory(bmiCategory);
+    }
 
     //BMR (Basal Metabolic Rate)
     public double calculateBMR(double weight, double height, int age, String gender ){
@@ -42,6 +51,11 @@ public class Calculator {
             return 0;
         }
             return bmr;
+    }
+    public void displayBMR(User user){
+        double bmr = calculateBMR(user.getWeight(),user.getHeight() , user.getAge(),user.getGender());
+        System.out.printf("BMR : %.2f Calories/day%n", bmr);
+        user.setBmr(bmr);
     }
 
     // TDEE (Total Daily Energy Expenditure)
@@ -67,6 +81,12 @@ public class Calculator {
         }
         return tdee;
     }
+    public void displayTdee(User user){
+        double bmrForTdee = calculateBMR(user.getWeight(), user.getHeight(),user.getAge(),user.getGender());
+        double tdee = calculateTDEE(bmrForTdee,user.getActivitylevel());
+        System.out.printf("TDEE : %.2f Calories/day%n", tdee);
+        user.setTdee(tdee);
+    }
 
     // Water Intake Calculator
     public double calculateWaterIntake(double  weight){
@@ -78,5 +98,23 @@ public class Calculator {
         double waterInLiters = waterIntake / 1000 ;
 
         return waterInLiters ;
+    }
+    public void displayWaterIntake(User user){
+        double waterIntake = calculateWaterIntake(user.getWeight());
+        System.out.println("====== Water Intake Calculator ======");
+        System.out.println();
+        System.out.println("Weight : " + user.getWeight() + " kg");
+        System.out.println();
+        System.out.printf("Recommended Water Intake : %.2f Liters/day%n" ,waterIntake);
+        System.out.println();
+        System.out.println("Drink water throughout the day instead of all at once.");
+        user.setWaterIntake(waterIntake);
+    }
+
+    public void displayFitnessReport(User user){
+        displayBMI(user);
+        displayBMR(user);
+        displayTdee(user);
+        displayWaterIntake(user);
     }
 }
