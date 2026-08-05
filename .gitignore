@@ -30,6 +30,3 @@ bin/
 
 # IntelliJ workspace
 .idea/
-
-# Generated report
-UserData.txt

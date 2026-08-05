@@ -1,19 +1,26 @@
 package app;
 import model.User;
 import service.*;
-import utils.*;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import database.DatabaseConnection;
+import java.sql.Connection;
+
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner (System.in);
+        Connection connection = DatabaseConnection.getConnection();
+
+        if (connection != null) {
+            System.out.println("Connected to MySQL successfully!");
+        } else {
+            System.out.println("Failed to connect to MySQL.");
+        }
         User user = new User();
         Calculator calculator = new Calculator();
         DietRecommendation dietRecommendation = new DietRecommendation();
         WorkoutRecommendation workoutRecommendation = new WorkoutRecommendation();
         WorkoutSchedule workoutSchedule = new WorkoutSchedule();
-        FileManager fileManager = new FileManager();
         UserService userService = new UserService();
         ProfileService profileService = new ProfileService();
 
@@ -26,13 +33,11 @@ public class Main {
             System.out.println("4. Diet Recommendation");
             System.out.println("5. Workout Recommendation");
             System.out.println("6. Weekly Workout Schedule");
-            System.out.println("7. Save User Data");
-            System.out.println("8. View Saved Report");
-            System.out.println("9. View All Users");
-            System.out.println("10. Search Users");
-            System.out.println("11. Update User");
-            System.out.println("12. Delete User");
-            System.out.println("13. Exit");
+            System.out.println("7. View All Users");
+            System.out.println("8. Search Users");
+            System.out.println("9. Update User");
+            System.out.println("10. Delete User");
+            System.out.println("11. Exit");
             System.out.println("Enter Your Choice:");
 
             try{
@@ -50,7 +55,6 @@ public class Main {
             case 1 :
                  userService.registerUser(sc);
                  break;
-
             case 2 :
                 currentUser = userService.getSelectedUser();
 
@@ -110,20 +114,14 @@ public class Main {
                 );
                 break;
             case 7 :
-                fileManager.saveAllUsers(userService.getAllUsers());
+                userService.viewAllUsersFromDatabase();
                 break;
             case 8 :
-                fileManager.readUserData();
-                break;
-            case 9 :
-                userService.viewAllUsers();
-                break;
-            case 10 :
                 System.out.print("Enter User ID: ");
                 int id = sc.nextInt();
                 sc.nextLine();
 
-                User foundUser = userService.searchUserById(id);
+                User foundUser = userService.searchUserByIdFromDatabase(id);
 
                 if (foundUser == null) {
                     System.out.println("User not found.");
@@ -132,43 +130,40 @@ public class Main {
                     System.out.println("User selected successfully.");
                 }
                 break;
-            case 11 :
+            case 9 :
                 System.out.print("Enter User ID to update: ");
-                int updateId = sc.nextInt();
+                id = sc.nextInt();
                 sc.nextLine();
 
-                User updateUser = userService.searchUserById(updateId);
+                User updateUser = userService.searchUserByIdFromDatabase(id);
 
-                if(updateUser == null){
+                if (updateUser == null) {
                     System.out.println("User not found.");
-                }
-                else{
-                    userService.updateUser(updateUser, sc);
+                } else {
+                    userService.updateUser(updateUser, sc);       // Update object
+                    userService.updateUserInDatabase(updateUser); // Save changes to MySQL
                 }
                 break;
-            case 12:
-
+            case 10:
                 System.out.print("Enter User ID to delete: ");
-                int deleteId = sc.nextInt();
+                id = sc.nextInt();
                 sc.nextLine();
 
-                boolean deleted = userService.deleteUser(deleteId);
+                boolean deleted = userService.deleteUserFromDatabase(id);
 
-                if(deleted){
+                if (deleted) {
                     System.out.println("User deleted successfully.");
-                }
-                else{
+                } else {
                     System.out.println("User not found.");
                 }
-
                 break;
-            case 13 :
+            case 11 :
                 System.out.println("Thank you for using AI Fitness & Diet Coach!");
                 break;
             default :
                 System.out.println();
                 System.out.println("Invalid Choice! Please enter 1, 2 or 3.");
             }
-        }while (choice != 13);
+        }while (choice != 11);
     }
 }

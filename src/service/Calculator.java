@@ -25,11 +25,17 @@ public class Calculator {
             return "Obese";
         }
     }
-    public void displayBMI(User user){
-        double bmi = calculateBMI(user.getHeight(),user.getWeight());
+    public void displayBMI(User user) {
+        double bmi = calculateBMI(user.getHeight(), user.getWeight());
+
+        // Round to 2 decimal places
+        bmi = Math.round(bmi * 100.0) / 100.0;
+
         System.out.printf("BMI : %.2f%n", bmi);
+
         String bmiCategory = getBMICategory(bmi);
-        System.out.println(bmiCategory);
+        System.out.println("BMI Category : " + bmiCategory);
+
         user.setBmi(bmi);
         user.setBmiCategory(bmiCategory);
     }
@@ -54,6 +60,7 @@ public class Calculator {
     }
     public void displayBMR(User user){
         double bmr = calculateBMR(user.getWeight(),user.getHeight() , user.getAge(),user.getGender());
+        bmr = Math.round(bmr * 100.0) / 100.0;
         System.out.printf("BMR : %.2f Calories/day%n", bmr);
         user.setBmr(bmr);
     }
@@ -84,6 +91,7 @@ public class Calculator {
     public void displayTdee(User user){
         double bmrForTdee = calculateBMR(user.getWeight(), user.getHeight(),user.getAge(),user.getGender());
         double tdee = calculateTDEE(bmrForTdee,user.getActivitylevel());
+        tdee = Math.round(tdee * 100.0) / 100.0;
         System.out.printf("TDEE : %.2f Calories/day%n", tdee);
         user.setTdee(tdee);
     }
@@ -105,6 +113,7 @@ public class Calculator {
         System.out.println();
         System.out.println("Weight : " + user.getWeight() + " kg");
         System.out.println();
+        waterIntake = Math.round(waterIntake * 100.0) / 100.0;
         System.out.printf("Recommended Water Intake : %.2f Liters/day%n" ,waterIntake);
         System.out.println();
         System.out.println("Drink water throughout the day instead of all at once.");
